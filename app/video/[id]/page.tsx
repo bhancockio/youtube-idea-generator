@@ -3,13 +3,14 @@ import VideoDetail from "@/components/video-detail";
 import { notFound } from "next/navigation";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function VideoPage({ params }: Props) {
-  const result = await getVideoWithComments(params.id);
+  const resolvedParams = await params;
+  const result = await getVideoWithComments(resolvedParams.id);
 
   if (!result) {
     notFound();
