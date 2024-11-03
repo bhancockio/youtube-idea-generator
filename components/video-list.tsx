@@ -8,27 +8,7 @@ import { Video } from "@/server/db/schema";
 import { Button } from "@/components/ui/button";
 import { scrapeVideos } from "@/server/youtube-actions";
 import { useToast } from "@/hooks/use-toast";
-
-// Add this helper function before the VideoList component
-const formatViewCount = (count: number): string => {
-  if (!count) return "0";
-
-  if (count >= 1000000) {
-    return `${(count / 1000000).toLocaleString(undefined, {
-      maximumFractionDigits: 1,
-      minimumFractionDigits: 0,
-    })}M`;
-  }
-
-  if (count >= 1000) {
-    return `${(count / 1000).toLocaleString(undefined, {
-      maximumFractionDigits: 1,
-      minimumFractionDigits: 0,
-    })}k`;
-  }
-
-  return count.toString();
-};
+import { formatCount } from "@/lib/utils";
 
 export default function VideoList({
   initialVideos,
@@ -137,7 +117,7 @@ export default function VideoList({
                 </p>
                 <div className="flex items-center text-xs text-muted-foreground">
                   <span>
-                    {video.viewCount ? formatViewCount(video.viewCount) : "0"}{" "}
+                    {video.viewCount ? formatCount(video.viewCount) : "0"}{" "}
                     views
                   </span>
                   <span className="mx-1">•</span>
