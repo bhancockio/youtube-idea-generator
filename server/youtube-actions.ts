@@ -12,6 +12,8 @@ import {
 } from "@/server/db/schema";
 import { google, youtube_v3 } from "googleapis";
 
+export const maxDuration = 60; // seconds
+
 const youtube = google.youtube({
   version: "v3",
   auth: process.env.YOUTUBE_API_KEY,
@@ -196,10 +198,7 @@ export async function scrapeVideos() {
         .select()
         .from(Videos)
         .where(
-          and(
-            eq(Videos.videoId, video.id.videoId),
-            eq(Videos.userId, userId)
-          )
+          and(eq(Videos.videoId, video.id.videoId), eq(Videos.userId, userId))
         )
         .limit(1);
 

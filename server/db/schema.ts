@@ -27,9 +27,9 @@ export const Videos = pgTable("videos", {
 });
 
 // Define relations
-// export const VideoRelations = relations(Videos, ({ many }) => ({
-//   comments: many(VideoComments, {}),
-// }));
+export const VideoRelations = relations(Videos, ({ many }) => ({
+  comments: many(VideoComments),
+}));
 
 export const YouTubeChannels = pgTable("youtube_channels", {
   id: uuid("id").defaultRandom().primaryKey(),
