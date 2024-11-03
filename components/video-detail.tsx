@@ -25,7 +25,7 @@ export default function VideoDetail({ video, comments }: Props) {
             {video.channelTitle}
           </div>
           <div className="flex items-center space-x-6 text-sm text-muted-foreground font-semibold">
-            <div className="flex items-center space-x-1 hover:text-red-500 ">
+            <div className="flex items-center space-x-1">
               <Eye className="w-4 h-4" strokeWidth={3} />
               <span>{formatCount(video.viewCount ?? 0)} views</span>
             </div>
