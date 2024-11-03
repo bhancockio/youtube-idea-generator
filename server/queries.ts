@@ -2,13 +2,15 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/server/db/drizzle";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import {
   Video,
   Videos,
   YouTubeChannels,
   YouTubeChannelType,
   VideoComments,
+  Ideas,
+  Idea,
 } from "@/server/db/schema";
 
 export const getVideosForUser = async (): Promise<Video[]> => {
@@ -64,4 +66,18 @@ export const getVideoWithComments = async (
     .orderBy(VideoComments.publishedAt);
 
   return { video, comments };
+};
+
+export const getIdeasForUser = async (): Promise<Idea[]> => {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  return db
+    .select()
+    .from(Ideas)
+    .where(eq(Ideas.userId, userId))
+    .orderBy(desc(Ideas.createdAt));
 };
