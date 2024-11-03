@@ -26,11 +26,6 @@ export const Videos = pgTable("videos", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Define relations
-export const VideoRelations = relations(Videos, ({ many }) => ({
-  comments: many(VideoComments),
-}));
-
 export const YouTubeChannels = pgTable("youtube_channels", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: varchar("user_id", { length: 50 }).notNull(),
@@ -42,9 +37,7 @@ export const YouTubeChannels = pgTable("youtube_channels", {
 
 export const VideoComments = pgTable("video_comments", {
   id: uuid("id").defaultRandom().primaryKey(),
-  videoId: uuid("video_id")
-    .notNull()
-    .references(() => Videos.id),
+  videoId: uuid("video_id").notNull(),
   userId: varchar("user_id", { length: 50 }).notNull(),
   commentText: text("comment_text").notNull(),
   likeCount: integer("like_count").default(0),
@@ -79,6 +72,17 @@ export const IdeaRelations = relations(Ideas, ({ one }) => ({
   comment: one(VideoComments, {
     fields: [Ideas.commentId],
     references: [VideoComments.id],
+  }),
+}));
+
+export const VideoRelations = relations(Videos, ({ many }) => ({
+  comments: many(VideoComments),
+}));
+
+export const VideoCommentRelations = relations(VideoComments, ({ one }) => ({
+  video: one(Videos, {
+    fields: [VideoComments.videoId],
+    references: [Videos.id],
   }),
 }));
 

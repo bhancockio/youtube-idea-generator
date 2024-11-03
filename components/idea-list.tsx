@@ -1,34 +1,74 @@
 "use client";
 
+import { useState } from "react";
 import { Idea } from "@/server/db/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { generateDummyIdea } from "@/server/ideas-actions";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props {
   initialIdeas: Idea[];
 }
 
 export default function IdeaList({ initialIdeas }: Props) {
+  const [ideas, setIdeas] = useState<Idea[]>(initialIdeas);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+
+  const handleGenerate = async () => {
+    setIsGenerating(true);
+    try {
+      const newIdea = await generateDummyIdea();
+      if (newIdea) {
+        setIdeas((prevIdeas) => [newIdea, ...prevIdeas]);
+        toast({
+          title: "New idea generated!",
+          description: "A new dummy idea has been added to your list.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to generate a new idea. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error generating dummy idea:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Ideas</h1>
-        <Button>Generate</Button>
+        <Button onClick={handleGenerate} disabled={isGenerating}>
+          {isGenerating ? "Generating..." : "Generate"}
+        </Button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {initialIdeas.length === 0 ? (
+        {ideas.length === 0 ? (
           <div className="col-span-full text-center py-10">
             <p className="text-muted-foreground mb-4">
               No ideas yet. Click Generate to create some ideas from your video
               comments.
             </p>
-            <Button>Generate Ideas</Button>
+            <Button onClick={handleGenerate} disabled={isGenerating}>
+              {isGenerating ? "Generating..." : "Generate Ideas"}
+            </Button>
           </div>
         ) : (
-          initialIdeas.map((idea) => (
+          ideas.map((idea) => (
             <Card key={idea.id} className="flex flex-col">
               <CardHeader>
                 <div className="flex items-start justify-between">
