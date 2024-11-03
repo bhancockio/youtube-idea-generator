@@ -12,8 +12,6 @@ import {
 } from "@/server/db/schema";
 import { google, youtube_v3 } from "googleapis";
 
-export const maxDuration = 60; // seconds
-
 const youtube = google.youtube({
   version: "v3",
   auth: process.env.YOUTUBE_API_KEY,
