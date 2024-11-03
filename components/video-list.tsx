@@ -64,7 +64,7 @@ export default function VideoList({
         <p className="mb-4">
           Please add YouTube channels and then scrape for videos.
         </p>
-        <Button onClick={handleScrape} disabled={isScraping}>
+        <Button onClick={handleScrape} disabled={isScraping} className="bg-red-500 hover:bg-red-600 transition-all">
           {isScraping ? "Scraping..." : "Scrape Videos"}
         </Button>
       </div>

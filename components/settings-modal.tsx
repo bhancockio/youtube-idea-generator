@@ -14,6 +14,7 @@ import { Settings, Plus, X } from "lucide-react";
 import { getChannelsForUser } from "@/server/queries";
 import { YouTubeChannelType } from "@/server/db/schema";
 import { addChannelForUser, removeChannelForUser } from "@/server/mutations";
+import { cn } from "@/lib/utils";
 
 export function SettingsModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,10 +70,9 @@ export function SettingsModal() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Settings className="h-5 w-5" />
-          <span className="sr-only">Settings</span>
-        </Button>
+        <p className="cursor-pointer text-primary hover:text-red-500 transition-all">
+          Settings
+        </p>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

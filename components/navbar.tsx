@@ -5,48 +5,59 @@ import { UserButton } from "@clerk/nextjs";
 import { SettingsModal } from "./settings-modal";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
+import { Button } from "./ui/button";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { isSignedIn } = useAuth();
 
   return (
-    <nav className="border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center">
+    <nav>
+      <div className="py-6">
+        <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-1">
-            <span className="text-lg font-semibold">YT</span>
-            <span className="text-lg">✨</span>
+            <span className="text-xl font-semibold">YT</span>
+            <span className="text-xl">✨</span>
           </Link>
 
-          <div className="flex items-center space-x-8 ml-auto mr-4">
-            <Link
-              href="/videos"
-              className={cn(
-                "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                pathname.startsWith("/videos")
-                  ? "border-b-2 border-primary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Videos
+          {isSignedIn && (
+            <div className="flex items-center space-x-8 ml-auto mr-4 text-md">
+              <Link
+                href="/videos"
+                className={cn(
+                  "text-md",
+                  pathname.startsWith("/videos")
+                    ? "border-b-2 border-red-500 text-red-500"
+                    : "text-primary hover:text-red-500 transition-all"
+                )}
+              >
+                Videos
+              </Link>
+              <Link
+                href="/ideas"
+                className={cn(
+                  "text-md",
+                  pathname.startsWith("/ideas")
+                    ? "border-b-2 border-red-500 text-red-500"
+                    : "text-primary hover:text-red-500 transition-all"
+                )}
+              >
+                Ideas
+              </Link>
+              <SettingsModal />
+              <UserButton appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8"
+                }
+              }} />
+            </div>
+          )}
+          {!isSignedIn && (
+            <Link href="/videos">
+              <Button>Get Started</Button>
             </Link>
-            <Link
-              href="/ideas"
-              className={cn(
-                "inline-flex items-center px-1 pt-1 text-sm font-medium",
-                pathname.startsWith("/ideas")
-                  ? "border-b-2 border-primary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Ideas
-            </Link>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <SettingsModal />
-            <UserButton afterSignOutUrl="/" />
-          </div>
+          )}
         </div>
       </div>
     </nav>
