@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl="/">
+    <ClerkProvider afterSignOutUrl="/" dynamic>
       <html lang="en">
         <body className={`${lato.className} bg-gray-50`}>
           <div className="max-w-6xl mx-auto min-h-screen">

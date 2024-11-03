@@ -3,12 +3,32 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
 import { Video } from "@/server/db/schema";
 import { Button } from "@/components/ui/button";
 import { scrapeVideos } from "@/server/youtube-actions";
 import { useToast } from "@/hooks/use-toast";
+
+// Add this helper function before the VideoList component
+const formatViewCount = (count: number): string => {
+  if (!count) return '0';
+  
+  if (count >= 1000000) {
+    return `${(count / 1000000).toLocaleString(undefined, { 
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 0 
+    })}M`;
+  }
+  
+  if (count >= 1000) {
+    return `${(count / 1000).toLocaleString(undefined, { 
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 0 
+    })}k`;
+  }
+  
+  return count.toString();
+};
 
 export default function VideoList({
   initialVideos,
@@ -74,12 +94,16 @@ export default function VideoList({
   return (
     <>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Videos</h1>
-        <Button onClick={handleScrape} disabled={isScraping}>
+        <h1 className="text-3xl font-bold">Videos</h1>
+        <Button
+          onClick={handleScrape}
+          disabled={isScraping}
+          className="bg-red-500 hover:bg-red-600 transition-all rounded-lg text-md font-semibold px-6 py-3"
+        >
           {isScraping ? "Scraping..." : "Scrape"}
         </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-6">
         {videos.map((video) => (
           <Link
             key={video.id}
@@ -88,12 +112,8 @@ export default function VideoList({
             onMouseEnter={() => setHoveredId(video.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
-            <motion.div
-              className="rounded-lg overflow-hidden bg-card border shadow-sm"
-              animate={{
-                scale: hoveredId === video.id ? 1.05 : 1,
-              }}
-              transition={{ duration: 0.2 }}
+            <div
+              className="rounded-2xl overflow-hidden border bg-white shadow-sm p-4 space-y-3 hover:scale-[1.05] transition-all duration-300"
             >
               <div className="aspect-video relative">
                 {video.thumbnailUrl ? (
@@ -101,7 +121,7 @@ export default function VideoList({
                     src={video.thumbnailUrl}
                     alt={video.title}
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-lg"
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -109,22 +129,22 @@ export default function VideoList({
                   </div>
                 )}
               </div>
-              <div className="p-4">
-                <h2 className="text-sm font-medium line-clamp-2 group-hover:text-primary">
+              <div className="space-y-1.5">
+                <h2 className="font-semibold line-clamp-2 group-hover:text-primary">
                   {video.title}
                 </h2>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground">
                   {video.channelTitle}
                 </p>
-                <div className="flex items-center text-xs text-muted-foreground mt-2">
-                  <span>{video.viewCount?.toLocaleString() ?? "0"} views</span>
+                <div className="flex items-center text-xs text-muted-foreground">
+                  <span>{video.viewCount ? formatViewCount(video.viewCount) : '0'} views</span>
                   <span className="mx-1">•</span>
                   <span>
                     {formatDistanceToNow(new Date(video.publishedAt))} ago
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </Link>
         ))}
       </div>
