@@ -11,22 +11,22 @@ import { useToast } from "@/hooks/use-toast";
 
 // Add this helper function before the VideoList component
 const formatViewCount = (count: number): string => {
-  if (!count) return '0';
-  
+  if (!count) return "0";
+
   if (count >= 1000000) {
-    return `${(count / 1000000).toLocaleString(undefined, { 
+    return `${(count / 1000000).toLocaleString(undefined, {
       maximumFractionDigits: 1,
-      minimumFractionDigits: 0 
+      minimumFractionDigits: 0,
     })}M`;
   }
-  
+
   if (count >= 1000) {
-    return `${(count / 1000).toLocaleString(undefined, { 
+    return `${(count / 1000).toLocaleString(undefined, {
       maximumFractionDigits: 1,
-      minimumFractionDigits: 0 
+      minimumFractionDigits: 0,
     })}k`;
   }
-  
+
   return count.toString();
 };
 
@@ -35,7 +35,6 @@ export default function VideoList({
 }: {
   initialVideos: Video[];
 }) {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isScraping, setIsScraping] = useState(false);
   const [videos, setVideos] = useState(initialVideos);
   const { toast } = useToast();
@@ -84,7 +83,11 @@ export default function VideoList({
         <p className="mb-4">
           Please add YouTube channels and then scrape for videos.
         </p>
-        <Button onClick={handleScrape} disabled={isScraping} className="bg-red-500 hover:bg-red-600 transition-all">
+        <Button
+          onClick={handleScrape}
+          disabled={isScraping}
+          className="bg-red-500 hover:bg-red-600 transition-all"
+        >
           {isScraping ? "Scraping..." : "Scrape Videos"}
         </Button>
       </div>
@@ -109,12 +112,8 @@ export default function VideoList({
             key={video.id}
             href={`/video/${video.id}`}
             className="group block"
-            onMouseEnter={() => setHoveredId(video.id)}
-            onMouseLeave={() => setHoveredId(null)}
           >
-            <div
-              className="rounded-2xl overflow-hidden border bg-white shadow-sm p-4 space-y-3 hover:scale-[1.05] transition-all duration-300"
-            >
+            <div className="rounded-2xl overflow-hidden border bg-white shadow-sm p-4 space-y-3 hover:scale-[1.05] transition-all duration-300">
               <div className="aspect-video relative">
                 {video.thumbnailUrl ? (
                   <Image
@@ -137,7 +136,10 @@ export default function VideoList({
                   {video.channelTitle}
                 </p>
                 <div className="flex items-center text-xs text-muted-foreground">
-                  <span>{video.viewCount ? formatViewCount(video.viewCount) : '0'} views</span>
+                  <span>
+                    {video.viewCount ? formatViewCount(video.viewCount) : "0"}{" "}
+                    views
+                  </span>
                   <span className="mx-1">•</span>
                   <span>
                     {formatDistanceToNow(new Date(video.publishedAt))} ago

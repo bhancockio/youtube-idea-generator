@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Settings, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { getChannelsForUser } from "@/server/queries";
 import { YouTubeChannelType } from "@/server/db/schema";
 import { addChannelForUser, removeChannelForUser } from "@/server/mutations";
-import { cn } from "@/lib/utils";
 
 export function SettingsModal() {
   const [isOpen, setIsOpen] = useState(false);
