@@ -4,16 +4,12 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
+import { Lato } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-roboto",
 });
 
 export const metadata: Metadata = {
@@ -27,14 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/" dynamic>
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background`}
-        >
-          <Navbar />
-          {children}
-          <Toaster />
+        <body className={`${lato.className} bg-gray-50`}>
+          <div className="max-w-6xl mx-auto min-h-screen">
+            <Navbar />
+            {children}
+            <Toaster />
+          </div>
         </body>
       </html>
     </ClerkProvider>

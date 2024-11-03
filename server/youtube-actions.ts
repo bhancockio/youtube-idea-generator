@@ -195,7 +195,12 @@ export async function scrapeVideos() {
       const existingVideo = await db
         .select()
         .from(Videos)
-        .where(eq(Videos.videoId, video.id.videoId))
+        .where(
+          and(
+            eq(Videos.videoId, video.id.videoId),
+            eq(Videos.userId, userId)
+          )
+        )
         .limit(1);
 
       let videoId: string;
