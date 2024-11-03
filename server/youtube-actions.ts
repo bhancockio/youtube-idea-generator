@@ -107,6 +107,12 @@ async function fetchVideoComments(videoId: string): Promise<YouTubeComment[]> {
         })) || [];
       allComments = allComments.concat(comments);
 
+      // Stop fetching if we have reached 100 comments
+      if (allComments.length >= 100) {
+        allComments = allComments.slice(0, 100);
+        break;
+      }
+
       nextPageToken =
         data.nextPageToken !== null ? data.nextPageToken : undefined;
     } catch (error) {
