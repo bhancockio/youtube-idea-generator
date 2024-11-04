@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <div className="py-6">
+      <div className="py-8">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-1">
             <span className="text-xl font-semibold">YT</span>
