@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/server/db/drizzle";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import {
   Videos,
   VideoComments,
@@ -67,4 +67,31 @@ export async function generateDummyIdea(): Promise<Idea | null> {
     console.error("Error inserting dummy idea:", error);
     return null;
   }
+}
+
+export async function generateIdeasForComments() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  // Fetch the last 25 comments with their corresponding video information
+  const comments = await db
+    .select({
+      video_title: Videos.title,
+      comment: VideoComments.commentText,
+      video_id: Videos.id,
+      comment_id: VideoComments.id,
+    })
+    .from(VideoComments)
+    .innerJoin(Videos, eq(VideoComments.videoId, Videos.id))
+    .where(eq(VideoComments.userId, userId))
+    .orderBy(desc(VideoComments.createdAt))
+    .limit(25);
+
+  // Print the result as a single JSON string
+  console.log(JSON.stringify(comments));
+
+  return comments;
 }

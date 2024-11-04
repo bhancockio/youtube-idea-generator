@@ -7,7 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { generateDummyIdea } from "@/server/ideas-actions";
+import {
+  generateDummyIdea,
+  generateIdeasForComments,
+} from "@/server/ideas-actions";
 import { useToast } from "@/hooks/use-toast";
 
 interface Props {
@@ -22,6 +25,8 @@ export default function IdeaList({ initialIdeas }: Props) {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
+      const newIdeas = await generateIdeasForComments();
+      console.log("newIdeas", newIdeas);
       const newIdea = await generateDummyIdea();
       if (newIdea) {
         setIdeas((prevIdeas) => [newIdea, ...prevIdeas]);
